@@ -18,6 +18,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
@@ -25,9 +28,12 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
+
     'rest_framework',
     'djoser',
     'rest_framework_simplejwt',
+    'jazzmin',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -105,8 +111,10 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SOCIAL_AUTH_ALLOWED_REDIRECTS': [],
     'SERIALIZERS': {
+        'user': 'users.serializers.CustomUserSerializer',  # Ajusta 'users' según el nombre de tu app
+        'current_user': 'users.serializers.CustomUserSerializer',
         'user_create': 'users.serializers.CustomUserCreateSerializer',
-        'user': 'users.serializers.CustomUserSerializer',
+
         'user_delete': 'users.serializers.CustomUserDeleteSerializer',
         'user_update': 'users.serializers.CustomUserUpdateSerializer',
         'username_reset': 'users.serializers.CustomUsernameResetSerializer',
@@ -120,7 +128,7 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Tiempo de vida del token de acceso
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Tiempo de vida del token de acceso
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Tiempo de vida del token de refresco
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -150,6 +158,16 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
+JAZZMIN_SETTINGS = {
+    "site_title": "Mi Admin Django",
+    "site_header": "Administración de Usuarios",
+    "site_brand": "Django Admin",
+    "login_logo": "logo.png",  # Agrega tu logo personalizado aquí
+    "topmenu_links": [
+        {"name": "Google", "url": "https://www.google.com", "new_window": True},
+    ],
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -161,6 +179,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

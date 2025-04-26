@@ -11,6 +11,8 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', admin.site.urls),
     path('api/', include([
+        path('api/auth/', include('djoser.urls')),  # Endpoints de djoser (register, reset password, etc)
+        path('api/auth/', include('djoser.urls.jwt')),  # Endpoints de JWT
         path('', include(router.urls)),
         path('auth/', include('rest_framework.urls', namespace='rest_framework')),
         # path('users/', include('users.urls')),
