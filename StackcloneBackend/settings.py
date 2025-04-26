@@ -28,7 +28,14 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+
+    'achievements',
+    'articles',
+    'points',
+    'questions',
+    'tags',
     'users',
+    'votes',
 
     'rest_framework',
     'djoser',
