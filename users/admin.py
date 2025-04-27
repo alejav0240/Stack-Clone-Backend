@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, Rank
 
+@admin.register(Rank)
+class RankAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'min_points')
+    search_fields = ('name',)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
