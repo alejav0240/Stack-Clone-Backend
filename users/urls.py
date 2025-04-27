@@ -1,7 +1,10 @@
-# productos/urls.py
-from django.urls import path
-from . import views
+from rest_framework import routers
+from .views import CustomUserViewSet
+from django.urls import path, include
+
+router = routers.DefaultRouter()
+router.register(r'users', CustomUserViewSet)
 
 urlpatterns = [
-    # Otras rutas relacionadas con productos
+    path('', include(router.urls)),
 ]

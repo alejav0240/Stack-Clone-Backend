@@ -7,6 +7,8 @@ class RankSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    rank = RankSerializer(read_only=True)
+
     class Meta:
         model = CustomUser
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'age', 'rol', 'habilitado', 'created_at')
