@@ -1,7 +1,11 @@
-# productos/urls.py
-from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
+from .views import AchievementViewSet, UserAchievementViewSet
+
+router = DefaultRouter()
+router.register(r'achievements', AchievementViewSet)
+router.register(r'user-achievements', UserAchievementViewSet)
 
 urlpatterns = [
-    # Otras rutas relacionadas con productos
+    path('', include(router.urls)),
 ]
