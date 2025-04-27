@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'jazzmin',
+    'django_extensions',
 
     'django.contrib.admin',
     'django.contrib.auth',
