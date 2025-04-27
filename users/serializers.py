@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, Rank
+
+class RankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rank
+        fields = '__all__'
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
