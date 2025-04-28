@@ -7,6 +7,13 @@ class Question(models.Model):
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
+    tags = models.ManyToManyField('tags.Tag', related_name='questions')
+
+    class Meta:
+        permissions = [
+            ("approve_question", "Puede aprobar preguntas"),
+            ("feature_question", "Puede destacar preguntas"),
+        ]
 
     def __str__(self):
         return self.title
