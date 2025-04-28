@@ -17,5 +17,10 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
 
+    class Meta:
+        permissions = [
+            ("can_vote", "Puede votar"),
+        ]
+
     def __str__(self):
         return f"{self.vote_type} by {self.user.username}"

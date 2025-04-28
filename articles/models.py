@@ -14,6 +14,12 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.ForeignKey(Status, null=True, blank=True, on_delete=models.SET_NULL)
 
+    class Meta:
+        permissions = [
+            ("approve_article", "Puede aprobar artículos"),
+            ("feature_article", "Puede destacar artículos"),
+        ]
+
     def __str__(self):
         return self.title
 
