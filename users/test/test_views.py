@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from users.models import CustomUser
-
+from django.contrib.auth.models import Group
 
 class UserViewSetTest(APITestCase):
     def setUp(self):
@@ -13,8 +13,9 @@ class UserViewSetTest(APITestCase):
         self.admin = CustomUser.objects.create_superuser(
             username='admin', email='admin@example.com', password='adminpass'
         )
-        self.login_url = reverse('jwt-create')
+        self.login_url = reverse('jwt-create-cookie')
         self.user_list_url = reverse('customuser-list')  # Endpoint para listar usuarios
+        self.user_detail_url = lambda user_id: reverse('customuser-detail', args=[user_id])  # Definir la URL de detalle
 
     def authenticate(self, username, password):
         """Helper para autenticar y obtener un token."""
@@ -84,14 +85,33 @@ class UserViewSetTest(APITestCase):
         self.assertEqual(response.data['username'], self.user.username)
 
     def test_non_admin_cannot_create_user(self):
-        """Probar que un usuario no administrador no puede crear usuarios."""
+        """Probar que un usuario no administrador puede registrarse."""
         self.authenticate('user1', 'pass1234')
         response = self.client.post(self.user_list_url, {
             'username': 'newuser',
             'email': 'newuser@example.com',
             'password': 'newpass123'
         })
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, "Un usuario no administrador pudo crear un usuario.")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED,
+                         "Un usuario no administrador no pudo registrarse.")
+        self.assertEqual(response.data['username'], 'newuser')
+
+    def test_admin_can_create_user_with_moderator_group(self):
+        """Probar que un administrador puede crear usuarios con el grupo Moderador."""
+        self.authenticate('admin', 'adminpass')
+        response = self.client.post(self.user_list_url, {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpass123',
+            'group': 'Moderador'  # Especificar el grupo Moderador en la solicitud
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, "El administrador no pudo crear un usuario.")
+        self.assertEqual(response.data['username'], 'newuser')
+
+        # Verificar que el usuario pertenece al grupo Moderador
+        new_user = CustomUser.objects.get(username='newuser')
+        moderator_group = Group.objects.get(name='Moderador')
+        self.assertIn(moderator_group, new_user.groups.all(), "El usuario no fue asignado al grupo Moderador.")
 
     def test_invalid_user_creation(self):
         """Probar que no se pueden crear usuarios con datos inválidos."""
@@ -105,16 +125,28 @@ class UserViewSetTest(APITestCase):
 
     def test_rank_viewset_access(self):
         """Probar acceso al endpoint de RankViewSet sin permisos."""
-        rank_list_url = reverse('rank-list')  # Asegúrate de que el nombre del endpoint sea correcto
+        self.authenticate('user1', 'pass1234')
+        rank_list_url = reverse('rank-list')
         response = self.client.get(rank_list_url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, "El endpoint RankViewSet no está protegido correctamente.")
 
     def test_cookie_token_obtain(self):
         """Probar que las cookies se establecen correctamente al iniciar sesión."""
+        print(self.login_url)
         response = self.client.post(self.login_url, {
             'username': 'user1',
             'password': 'pass1234'
-        })
+        }, content_type='application/json')
+
+        print(response.data)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Error en login.")
-        self.assertIn('access_token', response.cookies.keys(), "No se estableció la cookie de access_token.")
-        self.assertIn('refresh_token', response.cookies.keys(), "No se estableció la cookie de refresh_token.")
+
+        # Inspeccionar headers de respuesta
+        set_cookie_header = response.headers.get('Set-Cookie', '')
+        print("Set-Cookie header:", response.headers.get('Set-Cookie'))
+        print(response.cookies)
+
+        self.assertIn('access_token=', set_cookie_header, "No se estableció la cookie de access_token.")
+        self.assertIn('refresh_token=', set_cookie_header, "No se estableció la cookie de refresh_token.")
+
