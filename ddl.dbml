@@ -1,0 +1,171 @@
+// Tablas del sistema
+
+Table achievements_achievement {
+  id integer [pk, increment]
+  name varchar(255) [not null, unique]
+  description text [not null]
+}
+
+Table articles_status {
+  id integer [pk, increment]
+  name varchar(255) [not null, unique]
+}
+
+Table auth_group {
+  id integer [pk, increment]
+  name varchar(150) [not null, unique]
+}
+
+Table django_content_type {
+  id integer [pk, increment]
+  app_label varchar(100) [not null]
+  model varchar(100) [not null]
+}
+
+Table auth_permission {
+  id integer [pk, increment]
+  content_type_id integer [ref: > django_content_type.id]
+  codename varchar(100) [not null]
+  name varchar(255) [not null]
+}
+
+Table auth_group_permissions {
+  id integer [pk, increment]
+  group_id integer [ref: > auth_group.id]
+  permission_id integer [ref: > auth_permission.id]
+}
+
+Table django_migrations {
+  id integer [pk, increment]
+  app varchar(255) [not null]
+  name varchar(255) [not null]
+  applied datetime [not null]
+}
+
+Table django_session {
+  session_key varchar(40) [pk]
+  session_data text [not null]
+  expire_date datetime [not null]
+}
+
+Table tags_tag {
+  id integer [pk, increment]
+  name varchar(255) [not null, unique]
+  active bool [not null]
+}
+
+Table users_rank {
+  id integer [pk, increment]
+  name varchar(255) [not null, unique]
+  min_points integer [not null]
+}
+
+Table users_customuser {
+  id integer [pk, increment]
+  password varchar(128) [not null]
+  last_login datetime
+  is_superuser bool [not null]
+  username varchar(150) [not null, unique]
+  first_name varchar(150) [not null]
+  last_name varchar(150) [not null]
+  email varchar(254) [not null]
+  is_staff bool [not null]
+  is_active bool [not null]
+  date_joined datetime [not null]
+  age integer
+  rol varchar(50) [not null]
+  habilitado bool [not null]
+  created_at datetime [not null]
+  rank_id bigint [ref: > users_rank.id]
+  lastname varchar(255)
+  name varchar(255)
+}
+
+Table achievements_userachievement {
+  id integer [pk, increment]
+  achieved_at datetime [not null]
+  achievement_id bigint [ref: > achievements_achievement.id]
+  user_id bigint [ref: > users_customuser.id]
+}
+
+Table articles_article {
+  id integer [pk, increment]
+  title text [not null]
+  body text [not null]
+  created_at datetime [not null]
+  user_id bigint [ref: > users_customuser.id]
+  status_id bigint [ref: > articles_status.id]
+}
+
+Table articles_articleaudit {
+  id integer [pk, increment]
+  changed_at datetime [not null]
+  change_type varchar(255) [not null]
+  article_id bigint [ref: > articles_article.id]
+}
+
+Table django_admin_log {
+  id integer [pk, increment]
+  object_id text
+  object_repr varchar(200) [not null]
+  action_flag smallint [note: "unsigned", not null]
+  change_message text [not null]
+  content_type_id integer [ref: > django_content_type.id]
+  user_id bigint [ref: > users_customuser.id]
+  action_time datetime [not null]
+}
+
+Table points_userpoint {
+  id integer [pk, increment]
+  point_type varchar(20) [not null]
+  points integer [not null]
+  active bool [not null]
+  user_id bigint [ref: > users_customuser.id]
+}
+
+Table questions_question {
+  id integer [pk, increment]
+  title text [not null]
+  body text [not null]
+  created_at datetime [not null]
+  active bool [not null]
+  user_id bigint [ref: > users_customuser.id]
+}
+
+Table questions_answer {
+  id integer [pk, increment]
+  body text [not null]
+  created_at datetime [not null]
+  active bool [not null]
+  user_id bigint [ref: > users_customuser.id]
+  question_id bigint [ref: > questions_question.id]
+}
+
+Table questions_question_tags {
+  id integer [pk, increment]
+  question_id bigint [ref: > questions_question.id]
+  tag_id bigint [ref: > tags_tag.id]
+}
+
+Table users_customuser_groups {
+  id integer [pk, increment]
+  customuser_id bigint [ref: > users_customuser.id]
+  group_id integer [ref: > auth_group.id]
+}
+
+Table users_customuser_user_permissions {
+  id integer [pk, increment]
+  customuser_id bigint [ref: > users_customuser.id]
+  permission_id integer [ref: > auth_permission.id]
+}
+
+Table votes_vote {
+  id integer [pk, increment]
+  vote_type varchar(10) [not null]
+  created_at datetime [not null]
+  active bool [not null]
+  answer_id bigint [ref: > questions_answer.id]
+  article_id bigint [ref: > articles_article.id]
+  question_id bigint [ref: > questions_question.id]
+  user_id bigint [ref: > users_customuser.id]
+}

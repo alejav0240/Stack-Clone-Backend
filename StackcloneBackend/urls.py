@@ -15,10 +15,10 @@ auth_patterns = [
 api_patterns = [
     path('auth/', include(auth_patterns)),
     path('', include(router.urls)),
-    path('users/', include('users.urls')),
-    path('questions/', include('questions.urls')),
-    path('articles/', include('articles.urls')),
-    path('achievements/', include('achievements.urls')),
+    path('', include('users.urls')),
+    path('', include('questions.urls')),
+    path('', include('articles.urls')),
+    path('', include('achievements.urls')),
 ]
 
 # Rutas principales

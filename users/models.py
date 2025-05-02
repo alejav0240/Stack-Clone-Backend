@@ -6,6 +6,8 @@ class Rank(models.Model):
     min_points = models.IntegerField()
 
 class CustomUser(AbstractUser):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    lastname = models.CharField(max_length=255, blank=True, null=True)
     # Solo agregas campos nuevos
     age = models.IntegerField(null=True, blank=True)
     rol = models.CharField(max_length=50 , default='user')
