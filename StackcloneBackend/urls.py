@@ -7,7 +7,7 @@ router = routers.DefaultRouter()
 # Rutas de autenticación
 auth_patterns = [
     path('', include('djoser.urls')),  # Endpoints de djoser (register, reset password, etc)
-    path('', include('djoser.urls.jwt')),  # Endpoints de JWT
+    #path('', include('djoser.urls.jwt')),  # Endpoints de JWT
     path('', include('rest_framework.urls', namespace='rest_framework')),  # Navegador de API de DRF
 ]
 
