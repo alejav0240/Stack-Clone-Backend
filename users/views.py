@@ -7,7 +7,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import Group
 from .models import CustomUser, Rank
 from .serializers import CustomUserSerializer, RankSerializer, LoginUserSerializer
+import logging
 
+# Create a logger for this file
+logger = logging.getLogger(__name__)
 
 # 🔐 Permiso personalizado
 class IsAdminOrForbidden(BasePermission):
@@ -87,9 +90,9 @@ class RefreshAccessTokenView(APIView):
                 key='access_token',
                 value=access_token,
                 httponly=True,
-                secure=False,  # True en producción
+                secure=True,  # Changed to True
                 samesite='Lax',
-                max_age=60 * 5
+                max_age=300  # 5 minutes
             )
             return res
         except Exception:

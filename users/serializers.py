@@ -46,8 +46,9 @@ class CustomUserCreateSerializer(serializers.Serializer):
         user.groups.add(user_group)
         return user
 
+
 class LoginUserSerializer(Serializer):
-    username = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):

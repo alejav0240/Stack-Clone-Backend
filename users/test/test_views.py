@@ -92,8 +92,7 @@ class UserViewSetTest(APITestCase):
             'email': 'newuser@example.com',
             'password': 'newpass123'
         })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED,
-                         "Un usuario no administrador no pudo registrarse.")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED,"Un usuario no administrador no pudo registrarse.")
         self.assertEqual(response.data['username'], 'newuser')
 
     def test_admin_can_create_user_with_moderator_group(self):
@@ -132,21 +131,24 @@ class UserViewSetTest(APITestCase):
 
     def test_cookie_token_obtain(self):
         """Probar que las cookies se establecen correctamente al iniciar sesión."""
-        print(self.login_url)
         response = self.client.post(self.login_url, {
-            'username': 'user1',
+            'email': 'user1@example.com',
             'password': 'pass1234'
-        }, content_type='application/json')
-
-        print(response.data)
+        })
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Error en login.")
 
-        # Inspeccionar headers de respuesta
-        set_cookie_header = response.headers.get('Set-Cookie', '')
-        print("Set-Cookie header:", response.headers.get('Set-Cookie'))
-        print(response.cookies)
+        set_cookie = response.headers.get('Set-Cookie', '')
+        print("set Cokies",set_cookie)
 
-        self.assertIn('access_token=', set_cookie_header, "No se estableció la cookie de access_token.")
-        self.assertIn('refresh_token=', set_cookie_header, "No se estableció la cookie de refresh_token.")
+        print("Response cookies:", response.cookies)
+        
+        # Check if cookies exist
+        self.assertTrue('access_token' in response.cookies, "Access token cookie not set")
+        self.assertTrue('refresh_token' in response.cookies, "Refresh token cookie not set")
+        
+        # Check cookie attributes
+        access_cookie = response.cookies['access_token']
+        self.assertTrue(access_cookie['httponly'], "Access token cookie should be httponly")
+        self.assertTrue(access_cookie['secure'], "Access token cookie should be secure")
 
