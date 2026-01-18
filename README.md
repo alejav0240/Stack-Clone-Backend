@@ -1,137 +1,171 @@
-# StackcloneBackend
+# Backend Stack Develop 🚀
 
-StackcloneBackend es un proyecto basado en Django que replica funcionalidades básicas de una plataforma de preguntas y respuestas similar a Stack Overflow. Este backend incluye autenticación, gestión de usuarios, preguntas, respuestas, artículos, logros y más.
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/) [![Django](https://img.shields.io/badge/Django-4.x-green.svg)](https://www.djangoproject.com/) [![Django REST Framework](https://img.shields.io/badge/DRF-3.x-red.svg)](https://www.django-rest-framework.org/)
 
-## Características principales
+## Descripción del Proyecto 📝
 
-- **Autenticación JWT**: Implementada con `rest_framework_simplejwt` y `djoser`.
-- **Gestión de usuarios**: Personalización del modelo de usuario (`CustomUser`) y endpoints para registro, inicio de sesión, recuperación de contraseñas, etc.
-- **Gestión de contenido**: Soporte para preguntas, respuestas, artículos y logros.
-- **Paginación**: Configuración predeterminada con `PageNumberPagination`.
-- **Admin personalizado**: Interfaz de administración mejorada con `django-jazzmin`.
+Este repositorio aloja el backend de un clon mejorado de Stack Overflow, diseñado para ser una plataforma robusta de preguntas y respuestas. Desarrollado con **Django** y **Django REST Framework**, el proyecto se enfoca en proporcionar una API escalable y segura. Incluye funcionalidades esenciales como la gestión de usuarios, artículos, preguntas, respuestas, un sistema de votación, gamificación con puntos y logros, y una interfaz de administración mejorada con `Unfold`. La autenticación se gestiona de forma segura mediante **JSON Web Tokens (JWT)** basados en cookies, ofreciendo una base sólida para aplicaciones web o móviles interactivas.
 
-## Requisitos previos
+## Características Principales ✨
 
-- Python 3.10 o superior
-- Django 5.2
-- Virtualenv (opcional, pero recomendado)
+*   **Arquitectura Modular**: Organizado en aplicaciones Django (`achievements`, `articles`, `points`, `questions`, `tags`, `users`, `votes`) para facilitar la gestión, el desarrollo y la escalabilidad.
+*   **Autenticación Segura con JWT**: Implementa un sistema de autenticación moderno y seguro usando JSON Web Tokens, gestionados a través de cookies para una mejor experiencia de usuario y seguridad.
+*   **Experiencia de Administración Mejorada**: Utiliza `Unfold` para personalizar y modernizar la interfaz de administración de Django, ofreciendo una experiencia más intuitiva y agradable.
+*   **Funcionalidades Centrales de Q&A**: Incluye módulos para la gestión de preguntas, respuestas, comentarios y etiquetas, replicando las características esenciales de una plataforma como Stack Overflow.
+*   **Sistema de Gamificación**: Incorpora sistemas de puntos y logros para incentivar la participación y recompensar a los usuarios activos.
+*   **API RESTful Completa**: Expone todas las funcionalidades a través de una API RESTful bien definida, lo que permite una fácil integración con diversos clientes frontend (web, móvil).
+*   **Gestión de Contenido**: Capacidades para crear, leer, actualizar y eliminar artículos y contenido generado por el usuario.
+*   **Pruebas Integradas**: La presencia de directorios `test/` dentro de cada aplicación sugiere un enfoque en la calidad del código y la robustez de las funcionalidades.
 
-## Instalación
+## Requisitos Previos 🛠️
 
-1. Clona este repositorio:
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd StackcloneBackend
-   ```
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
-2. Crea y activa un entorno virtual:
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # En Windows: .venv\Scripts\activate
-   ```
+*   [Python](https://www.python.org/downloads/) 3.9 o superior
+*   `pip` (administrador de paquetes de Python)
+*   Una base de datos compatible con Django (se recomienda PostgreSQL para producción, pero SQLite es suficiente para desarrollo).
 
-3. Instala las dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Instrucciones de Instalación 🚀
 
-4. Realiza las migraciones de la base de datos:
-   ```bash
-   python manage.py migrate
-   ```
+Sigue estos pasos para configurar y ejecutar el proyecto localmente:
 
-5. Inicia el servidor de desarrollo:
-   ```bash
-   python manage.py runserver
-   ```
+1.  **Clonar el repositorio**:
+    ```bash
+    git clone https://github.com/tu-usuario/Stack-Clone-Backend.git
+    cd Stack-Clone-Backend
+    ```
 
-## Endpoints principales
+2.  **Crear y activar un entorno virtual**:
+    Es una buena práctica usar entornos virtuales para gestionar las dependencias del proyecto.
+    ```bash
+    python -m venv venv
+    # En Windows
+    .\venv\Scripts\activate
+    # En macOS/Linux
+    source venv/bin/activate
+    ```
 
-### Autenticación
-- `/api/auth/jwt/create/`: Obtener un token de acceso.
-- `/api/auth/jwt/refresh/`: Refrescar el token de acceso.
-- `/api/auth/jwt/verify/`: Verificar la validez del token.
+3.  **Instalar las dependencias**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### Usuarios
-- `/api/auth/users/`: Gestión de usuarios (registro, detalles, etc.).
-- `/api/auth/users/me/`: Información del usuario autenticado.
+4.  **Configurar variables de entorno**:
+    Crea un archivo `.env` en el directorio raíz del proyecto (junto a `manage.py`) y añade tus configuraciones. Puedes usar `.env.example` como plantilla. Por ejemplo:
+    ```
+    SECRET_KEY='tu_clave_secreta_de_django_muy_segura'
+    DEBUG=True
+    DATABASE_URL='sqlite:///db.sqlite3' # O tu URL de PostgreSQL/MySQL, e.g., 'postgresql://user:password@host:port/database_name'
+    # JWT Settings
+    ACCESS_TOKEN_LIFETIME_MINUTES=5
+    REFRESH_TOKEN_LIFETIME_DAYS=1
+    ```
+    Asegúrate de reemplazar `tu_clave_secreta_de_django_muy_segura` con una clave secreta fuerte y la `DATABASE_URL` con la configuración de tu base de datos.
 
-### Preguntas y Respuestas
-- `/api/questions/questions/`: Listar y crear preguntas.
-- `/api/questions/answers/`: Listar y crear respuestas.
+5.  **Realizar migraciones de la base de datos**:
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 
-### Artículos
-- `/api/articles/articles/`: Listar y gestionar artículos.
+6.  **Crear un superusuario (opcional, para acceder al panel de administración)**:
+    ```bash
+    python manage.py createsuperuser
+    ```
 
-### Logros
-- `/api/achievements/achievements/`: Listar y gestionar logros.
+7.  **Ejecutar el servidor de desarrollo**:
+    ```bash
+    python manage.py runserver
+    ```
+    El backend estará disponible en `http://127.0.0.1:8000/`. El panel de administración estará en `http://127.0.0.1:8000/admin/`.
 
-## Configuración adicional
+## Guía de Uso (Ejemplos de Endpoints de API) 💡
 
-### Variables de entorno
-Asegúrate de configurar las siguientes variables de entorno en producción:
-- `SECRET_KEY`: Clave secreta de Django.
-- `DEBUG`: Establecer en `False` en producción.
-- `ALLOWED_HOSTS`: Lista de dominios permitidos.
+Aquí tienes algunos ejemplos de los endpoints de la API que puedes esperar. Para detalles completos, se recomienda explorar la documentación de la API (si está disponible a través de `drf-yasg` o `drf-spectacular`) o el código fuente.
 
-### Archivos estáticos
-Ejecuta el siguiente comando para recopilar los archivos estáticos:
-```bash
-python manage.py collectstatic
+**Autenticación:**
+
+*   **Registro de Usuario**: `POST /api/users/register/`
+    ```json
+    {
+        "email": "nuevo@ejemplo.com",
+        "password": "una_contraseña_segura",
+        "name": "Nuevo",
+        "lastname": "Usuario"
+    }
+    ```
+*   **Inicio de Sesión (Obtener Tokens)**: `POST /api/users/login/`
+    ```json
+    {
+        "email": "usuario@ejemplo.com",
+        "password": "tu_contraseña"
+    }
+    ```
+*   **Refrescar Token**: `POST /api/users/token/refresh/` (usando el refresh token en cookies)
+*   **Cerrar Sesión**: `POST /api/users/logout/`
+
+**Preguntas:**
+
+*   **Listar Preguntas**: `GET /api/questions/`
+*   **Crear Pregunta**: `POST /api/questions/` (requiere autenticación)
+*   **Ver Detalle de Pregunta**: `GET /api/questions/{id}/`
+*   **Votar Pregunta**: `POST /api/questions/{id}/vote/` (requiere autenticación)
+
+**Usuarios:**
+
+*   **Ver Perfil del Usuario Actual**: `GET /api/users/me/` (requiere autenticación)
+
+## Estructura del Proyecto 🌳
+```
+Stack-Clone-Backend/
+├── StackcloneBackend/          # Configuración principal del proyecto Django
+│   ├── settings.py             # Configuración del proyecto
+│   ├── urls.py                 # URL's globales del proyecto
+│   └── ...
+├── achievements/               # Gestión de logros de usuario
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── articles/                   # Gestión de artículos y publicaciones
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── points/                     # Sistema de puntos para usuarios
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── questions/                  # Core de preguntas, respuestas y comentarios
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── tags/                       # Gestión de etiquetas para preguntas y artículos
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── users/                      # Gestión de usuarios, autenticación y perfiles
+│   ├── models.py
+│   ├── views.py
+│   ├── authentication.py       # Lógica de autenticación JWT
+│   └── ...
+├── votes/                      # Sistema de votación para contenido
+│   ├── models.py
+│   ├── views.py
+│   └── ...
+├── .env.example                # Ejemplo de archivo de variables de entorno
+├── LICENSE                     # Información de la licencia
+├── README.md                   # Este archivo
+├── ddl.dbml                    # Definición del esquema de la base de datos (DBML)
+├── ddl.sql                     # Script SQL para la base de datos
+├── diagramDatabase.png         # Diagrama visual de la base de datos
+├── manage.py                   # Utilidad de línea de comandos de Django
+└── requirements.txt            # Dependencias del proyecto
 ```
 
-## Tecnologías utilizadas
+## Tecnologías Utilizadas 💻
 
-- **Framework**: Django, Django REST Framework
-- **Autenticación**: Simple JWT, Djoser
-- **Base de datos**: SQLite (por defecto, puedes cambiarla en `settings.py`)
-- **Admin**: Django Jazzmin
-
-
-### Gestión de Artículos
-
-El módulo de artículos permite a los usuarios crear, leer, actualizar y eliminar artículos. Además, incluye funcionalidades para auditar cambios y gestionar estados de los artículos.
-
-#### Endpoints relacionados
-
-- **Artículos**:
-  - `GET /api/articles/articles/`: Lista todos los artículos.
-  - `POST /api/articles/articles/`: Crea un nuevo artículo.
-  - `GET /api/articles/articles/<id>/`: Obtiene los detalles de un artículo específico.
-  - `PUT /api/articles/articles/<id>/`: Actualiza un artículo existente.
-  - `DELETE /api/articles/articles/<id>/`: Elimina un artículo.
-
-- **Auditoría de Artículos**:
-  - `GET /api/articles/article-audits/`: Lista los registros de auditoría de artículos.
-  - `GET /api/articles/article-audits/<id>/`: Obtiene los detalles de un registro de auditoría específico.
-
-- **Estados de Artículos**:
-  - `GET /api/articles/status/`: Lista los estados disponibles para los artículos.
-  - `POST /api/articles/status/`: Crea un nuevo estado.
-  - `GET /api/articles/status/<id>/`: Obtiene los detalles de un estado específico.
-  - `PUT /api/articles/status/<id>/`: Actualiza un estado existente.
-  - `DELETE /api/articles/status/<id>/`: Elimina un estado.
-
-#### Funcionalidades principales
-
-- **Creación y edición**: Los usuarios autenticados pueden crear y modificar artículos.
-- **Auditoría**: Cada cambio realizado en un artículo se registra para mantener un historial detallado.
-- **Gestión de estados**: Los artículos pueden tener estados personalizados, como "Borrador", "Publicado", o "Archivado".
-
-#### Ejemplo de solicitud para crear un artículo
-
-```bash
-curl -X POST http://localhost:8000/api/articles/articles/ \
--H "Authorization: Bearer <TOKEN>" \
--H "Content-Type: application/json" \
--d '{
-  "title": "Mi primer artículo",
-  "content": "Este es el contenido del artículo.",
-  "status": 1
-}'
-```
-
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT.
+*   **Python**: Lenguaje de programación principal.
+*   **Django**: Framework web de alto nivel para un desarrollo rápido y limpio.
+*   **Django REST Framework**: Toolkit flexible para construir APIs web robustas.
+*   **djangorestframework-simplejwt**: Implementación sencilla y segura de JWT para DRF.
+*   **django-unfold**: Tema moderno y personalizable para el panel de administración de Django.
+*   **python-dotenv**: Gestión de variables de entorno desde archivos `.env`.
