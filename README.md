@@ -31,7 +31,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto localmente:
 
 1.  **Clonar el repositorio**:
     ```bash
-    git clone https://github.com/tu-usuario/Stack-Clone-Backend.git
+    git clone https://github.com/alejav0240/Stack-Clone-Backend.git
     cd Stack-Clone-Backend
     ```
 
